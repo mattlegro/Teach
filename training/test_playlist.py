@@ -7,6 +7,6 @@ def make_default_playlist():
         bronze_goalie.make_default_playlist()
     )
     for exercise in exercises:
-        exercise.match_config = hello_world_training.make_match_config_with_my_bot()
+        exercise.match_config = hello_world_training.make_match_config_with_cfg()
 
     return exercises
