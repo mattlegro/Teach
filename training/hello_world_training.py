@@ -9,6 +9,7 @@ from rlbottraining.rng import SeededRandomNumberGenerator
 from rlbottraining.match_configs import make_empty_match_config
 from rlbottraining.grading.grader import Grader
 from rlbottraining.training_exercise import TrainingExercise, Playlist
+from rlbot.matchconfig.conversions import read_match_config_from_file
 
 import training_util
 from drive_to_ball_grader import DriveToBallGrader
@@ -26,6 +27,37 @@ def make_match_config_with_my_bot() -> MatchConfig:
     ]
     return match_config
 
+# def make_match_config_with_human() -> MatchConfig:
+#     # Makes a config with a single human.
+#     match_config = make_empty_match_config()
+#     match_config.player_configs = [
+#         PlayerConfig.bot_config(
+#             Path(__file__).absolute().parent.parent / 'src' / 'bot.cfg',
+#             Team.BLUE
+#         ),
+#     ]
+#     human = match_config.player_configs[0]
+#     human.bot = False
+#     human.rlbot_controlled = False
+#     human.human_index = 0
+#     return match_config
+
+def make_match_config_with_human() -> MatchConfig:
+    # Makes a config with a single human.
+    localPath = Path(__file__).absolute().parent.parent
+    match_config = read_match_config_from_file(localPath / 'rlbot.cfg' )
+    # match_config.player_configs = [
+    #     PlayerConfig.bot_config(
+    #         localPath / 'src' / 'bot.cfg',
+    #         Team.BLUE
+    #     ),
+    # ]
+    # human = match_config.player_configs[0]
+    # human.bot = False
+    # human.rlbot_controlled = False
+    # human.human_index = 0
+    return match_config
+
 
 def add_my_bot_to_playlist(exercises: Playlist) -> Playlist:
     """
@@ -36,6 +68,14 @@ def add_my_bot_to_playlist(exercises: Playlist) -> Playlist:
         exercise.match_config = make_match_config_with_my_bot()
     return exercises
 
+def add_human_to_playlist(exercises: Playlist) -> Playlist:
+    """
+    Updates the match config for each excercise to include
+    the bot from this project
+    """
+    for exercise in exercises:
+        exercise.match_config = make_match_config_with_human()
+    return exercises
 
 @dataclass
 class StrikerPatience(StrikerExercise):
@@ -96,9 +136,9 @@ class DrivesToBallExercise(TrainingExercise):
 
 def make_default_playlist() -> Playlist:
     exercises = [
-        StrikerPatience('start perfectly center'),
-        StrikerPatience('start on the right', car_start_x=-1000),
-        DrivesToBallExercise('Get close to ball'),
-        DrivesToBallExercise('Get close-ish to ball', grader=DriveToBallGrader(min_dist_to_pass=1000))
+        #StrikerPatience('start perfectly center'),
+        #StrikerPatience('start on the right', car_start_x=-1000),
+        DrivesToBallExercise('Get to ball'),
+        #DrivesToBallExercise('Get close-ish to ball', grader=DriveToBallGrader(min_dist_to_pass=1000))
     ]
-    return add_my_bot_to_playlist(exercises)
+    return add_human_to_playlist(exercises)
