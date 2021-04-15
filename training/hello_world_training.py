@@ -27,35 +27,25 @@ def make_match_config_with_my_bot() -> MatchConfig:
     ]
     return match_config
 
-# def make_match_config_with_human() -> MatchConfig:
-#     # Makes a config with a single human.
-#     match_config = make_empty_match_config()
-#     match_config.player_configs = [
-#         PlayerConfig.bot_config(
-#             Path(__file__).absolute().parent.parent / 'src' / 'bot.cfg',
-#             Team.BLUE
-#         ),
-#     ]
-#     human = match_config.player_configs[0]
-#     human.bot = False
-#     human.rlbot_controlled = False
-#     human.human_index = 0
-#     return match_config
-
 def make_match_config_with_human() -> MatchConfig:
     # Makes a config with a single human.
+    match_config = make_empty_match_config()
+    match_config.player_configs = [
+        PlayerConfig.bot_config(
+            Path(__file__).absolute().parent.parent / 'src' / 'bot.cfg',
+            Team.BLUE
+        ),
+    ]
+    human = match_config.player_configs[0]
+    human.bot = False
+    human.rlbot_controlled = False
+    human.human_index = 0
+    return match_config
+
+def make_match_config_with_cfg() -> MatchConfig:
+    # Makes a config from the rlbot.cfg file for match customization.
     localPath = Path(__file__).absolute().parent.parent
     match_config = read_match_config_from_file(localPath / 'rlbot.cfg' )
-    # match_config.player_configs = [
-    #     PlayerConfig.bot_config(
-    #         localPath / 'src' / 'bot.cfg',
-    #         Team.BLUE
-    #     ),
-    # ]
-    # human = match_config.player_configs[0]
-    # human.bot = False
-    # human.rlbot_controlled = False
-    # human.human_index = 0
     return match_config
 
 
@@ -75,6 +65,15 @@ def add_human_to_playlist(exercises: Playlist) -> Playlist:
     """
     for exercise in exercises:
         exercise.match_config = make_match_config_with_human()
+    return exercises
+
+def add_cfg_to_playlist(exercises: Playlist) -> Playlist:
+    """
+    Updates the match config for each excercise to include
+    the desired configuration based on rlbot.cfg
+    """
+    for exercise in exercises:
+        exercise.match_config = make_match_config_with_cfg()
     return exercises
 
 @dataclass
@@ -141,4 +140,4 @@ def make_default_playlist() -> Playlist:
         DrivesToBallExercise('Get to ball'),
         #DrivesToBallExercise('Get close-ish to ball', grader=DriveToBallGrader(min_dist_to_pass=1000))
     ]
-    return add_human_to_playlist(exercises)
+    return add_cfg_to_playlist(exercises)
