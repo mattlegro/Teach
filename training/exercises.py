@@ -66,13 +66,3 @@ class DrivesToBallExercise(TrainingExercise):
             },
             boosts={i: BoostState(0) for i in range(34)},
         )
-
-
-def make_default_playlist() -> Playlist:
-    exercises = [
-        #StrikerPatience('start perfectly center'),
-        #StrikerPatience('start on the right', car_start_x=-1000),
-        DrivesToBallExercise('Get to ball'),
-        #DrivesToBallExercise('Get close-ish to ball', grader=DriveToBallGrader(min_dist_to_pass=1000))
-    ]
-    return add_cfg_to_playlist(exercises)
